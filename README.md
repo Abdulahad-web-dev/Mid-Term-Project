@@ -18,19 +18,19 @@
 
 ## 📸 Screenshots
 
-*(Add your screenshots to the `public/screenshots/` folder to display them here!)*
+*(Add your screenshots to the `screenshots/` folder to display them here!)*
 
 ### 1. Home / Landing Page
-![Landing Page](./public/screenshots/home.png)
+![Landing Page](./screenshots/hero.png)
 
 ### 2. Secure Login System
-![Authentication](./public/screenshots/login.png)
+![Authentication](./screenshots/login.png)
 
 ### 3. Admin Dashboard
-![Admin Panel](./public/screenshots/admin.png)
+![Admin Panel](./screenshots/admin_dashboard.png)
 
 ### 4. Seller & Buyer Panels
-![Seller Panel](./public/screenshots/seller.png)
+![Seller Panel](./screenshots/dashboard.png)
 
 ---
 
