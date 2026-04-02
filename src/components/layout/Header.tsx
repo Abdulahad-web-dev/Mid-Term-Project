@@ -21,8 +21,8 @@ export default function Header() {
 
   const navLinks = [
     { name: "Explore", href: "/explore" },
-    { name: "Packages", href: "/packages" },
-    { name: "FAQ", href: "/faq" },
+    { name: "Packages", href: "/#packages" },
+    { name: "FAQ", href: "/#faq" },
   ];
 
   return (
@@ -78,7 +78,7 @@ export default function Header() {
             </Button>
           </Link>
           
-          <Link href="/submit">
+          <Link href="/dashboard/submit">
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Button className="bg-primary hover:bg-primary/90 text-white shadow-lg shadow-primary/20 font-bold px-6">
                 Post Ad

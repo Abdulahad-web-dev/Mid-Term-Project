@@ -4,6 +4,7 @@ import { Check, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/layout/Container";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 const PACKAGES = [
   {
@@ -120,16 +121,18 @@ export default function PackagesSection() {
                 ))}
               </ul>
 
-              <Button 
-                variant={pkg.isFeatured ? "default" : "outline"} 
-                className={`w-full h-14 rounded-2xl font-black text-lg transition-all duration-300 ${
-                  pkg.isFeatured 
-                    ? "bg-primary hover:bg-primary/90 shadow-xl shadow-primary/30" 
-                    : "border-white/10 hover:bg-white/5 hover:border-white/30"
-                }`}
-              >
-                Get Started
-              </Button>
+              <Link href="/dashboard/submit" className="w-full">
+                <Button 
+                  variant={pkg.isFeatured ? "default" : "outline"} 
+                  className={`w-full h-14 rounded-2xl font-black text-lg transition-all duration-300 ${
+                    pkg.isFeatured 
+                      ? "bg-primary hover:bg-primary/90 shadow-xl shadow-primary/30" 
+                      : "border-white/10 hover:bg-white/5 hover:border-white/30"
+                  }`}
+                >
+                  Get Started
+                </Button>
+              </Link>
             </motion.div>
           ))}
         </motion.div>

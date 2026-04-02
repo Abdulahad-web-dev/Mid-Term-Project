@@ -3,6 +3,7 @@ import Hero from "@/components/home/Hero";
 import PackagesSection from "@/components/home/Packages";
 import FeaturedAds from "@/components/home/FeaturedAds";
 import CategoryNav from "@/components/home/CategoryNav";
+import FAQSection from "@/components/home/FAQ";
 
 export default function Home() {
   return (
@@ -11,6 +12,7 @@ export default function Home() {
       <CategoryNav />
       <FeaturedAds />
       <PackagesSection />
+      <FAQSection />
     </MainLayout>
   );
 }

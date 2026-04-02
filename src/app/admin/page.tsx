@@ -1,4 +1,6 @@
 "use client";
+// Last Update: 2026-04-02 12:10 PM - Functional Admin Fix
+
 
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { CheckCircle, XCircle, DollarSign, Users, BarChart3, Activity } from "lucide-react";
@@ -7,32 +9,52 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 
-const INITIAL_PAYMENTS = [
-  { id: "1", ad: "Premium Tech Workspace", amount: "45,000", ref: "TXN123456", sender: "Alex Johnson", status: "Pending" },
-  { id: "2", ad: "Luxury Electric SUV", amount: "85,000", ref: "TXN789012", sender: "Sarah Smith", status: "Pending" },
-  { id: "3", ad: "Gaming Laptop RTX 4080", amount: "1,800", ref: "TXN345678", sender: "Mike Ross", status: "Pending" },
-];
-
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 
 export default function AdminDashboard() {
   const router = useRouter();
-  const [payments, setPayments] = useState(INITIAL_PAYMENTS);
+  const [ads, setAds] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const supabase = createClient();
+
+  const fetchPendingAds = useCallback(async () => {
+    try {
+      const { data, error } = await supabase
+        .from('ads')
+        .select('*')
+        .eq('status', 'Pending')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setAds(data || []);
+    } catch (err: any) {
+      console.error("Error fetching ads:", err.message);
+    } finally {
+      setLoading(false);
+    }
+  }, [supabase]);
 
   useEffect(() => {
-    // Demo admin check: In a real app, this would check the Supabase session/role
-    const checkAdmin = async () => {
-      // Small delay for realism
-      await new Promise(r => setTimeout(r, 500));
-      setLoading(false);
-    };
-    checkAdmin();
-  }, [router]);
+    fetchPendingAds();
+  }, [fetchPendingAds]);
 
-  const handleAction = (id: string, newStatus: string) => {
-    setPayments(prev => prev.map(p => p.id === id ? { ...p, status: newStatus } : p));
+  const handleAction = async (id: string, newStatus: string) => {
+    try {
+      const { error } = await supabase
+        .from('ads')
+        .update({ status: newStatus })
+        .eq('id', id);
+
+      if (error) throw error;
+      
+      // Update local state
+      setAds(prev => prev.filter(ad => ad.id !== id));
+      alert(`Ad has been ${newStatus.toLowerCase()}!`);
+    } catch (err: any) {
+      alert("Error updating ad: " + err.message);
+    }
   };
 
   if (loading) {
@@ -51,7 +73,7 @@ export default function AdminDashboard() {
       <div className="space-y-8">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold mb-2">Admin <span className="text-primary font-black uppercase">Panel</span></h1>
+            <h1 className="text-3xl font-bold mb-2">ADFLOW ADMIN <span className="text-primary font-black uppercase">v2.0</span></h1>
             <p className="text-muted-foreground">Platform oversight, payment verification, and system analytics.</p>
           </div>
           <Button className="bg-primary hover:bg-primary/90 text-white gap-2 font-bold">
@@ -81,62 +103,64 @@ export default function AdminDashboard() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-6">
             <div className="p-6 rounded-3xl border border-white/10 bg-white/[0.02]">
-              <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
-                <DollarSign className="w-5 h-5 text-green-500" /> Payment Verification Queue
-              </h3>
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-bold flex items-center gap-2">
+                  <Activity className="w-5 h-5 text-primary" /> Ad Approval Queue
+                </h3>
+                <Badge variant="outline" className="text-xs uppercase font-black px-3 py-1 border-primary/20 bg-primary/5 text-primary">
+                  {ads.length} PENDING
+                </Badge>
+              </div>
               
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                   <thead>
                     <tr className="text-xs uppercase tracking-widest font-semibold border-b border-white/10 text-muted-foreground">
-                      <th className="px-4 py-3">Ad / Reference</th>
-                      <th className="px-4 py-3">Sender</th>
-                      <th className="px-4 py-3 text-right">Amount</th>
+                      <th className="px-4 py-3">Ad Title / Category</th>
+                      <th className="px-4 py-3">City</th>
+                      <th className="px-4 py-3 text-right">Price</th>
                       <th className="px-4 py-3 text-right">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-white/5">
-                    {payments.map((item) => (
-                      <tr key={item.id} className="group hover:bg-white/[0.02]">
-                        <td className="px-4 py-4">
-                          <div className="font-medium text-sm">{item.ad}</div>
-                          <div className="text-[10px] text-muted-foreground font-mono">{item.ref}</div>
-                        </td>
-                        <td className="px-4 py-4 text-sm text-gray-300">{item.sender}</td>
-                        <td className="px-4 py-4 text-right font-bold text-green-500">Rs. {item.amount}</td>
-                        <td className="px-4 py-4 text-right">
-                          <div className="flex items-center justify-end gap-2">
-                            {item.status === "Pending" ? (
-                              <>
-                                <Button 
-                                  variant="ghost" 
-                                  size="sm" 
-                                  className="text-xs text-green-500 hover:bg-green-500/10"
-                                  onClick={() => handleAction(item.id, "Verified")}
-                                >
-                                  Verify
-                                </Button>
-                                <Button 
-                                  variant="ghost" 
-                                  size="sm" 
-                                  className="text-xs text-destructive hover:bg-destructive/10"
-                                  onClick={() => handleAction(item.id, "Rejected")}
-                                >
-                                  Reject
-                                </Button>
-                              </>
-                            ) : (
-                              <Badge className={cn(
-                                "border-none py-1 h-7",
-                                item.status === "Verified" ? "bg-green-500/10 text-green-500" : "bg-destructive/10 text-destructive"
-                              )}>
-                                {item.status}
-                              </Badge>
-                            )}
-                          </div>
+                    {ads.length === 0 ? (
+                      <tr>
+                        <td colSpan={4} className="px-4 py-12 text-center text-muted-foreground italic">
+                          No pending ads currently in queue.
                         </td>
                       </tr>
-                    ))}
+                    ) : (
+                      ads.map((item) => (
+                        <tr key={item.id} className="group hover:bg-white/[0.02]">
+                          <td className="px-4 py-4">
+                            <div className="font-medium text-sm">{item.title}</div>
+                            <div className="text-[10px] text-primary font-black uppercase tracking-tighter">{item.category}</div>
+                          </td>
+                          <td className="px-4 py-4 text-xs text-gray-400 font-medium">{item.city}</td>
+                          <td className="px-4 py-4 text-right font-bold text-white">Rs. {Number(item.price).toLocaleString()}</td>
+                          <td className="px-4 py-4 text-right">
+                            <div className="flex items-center justify-end gap-2">
+                              <Button 
+                                variant="ghost" 
+                                size="sm" 
+                                className="text-xs text-green-500 hover:bg-green-500/10 font-black uppercase tracking-widest"
+                                onClick={() => handleAction(item.id, "Approved")}
+                              >
+                                Approve
+                              </Button>
+                              <Button 
+                                variant="ghost" 
+                                size="sm" 
+                                className="text-xs text-destructive hover:bg-destructive/10 font-black uppercase tracking-widest"
+                                onClick={() => handleAction(item.id, "Rejected")}
+                              >
+                                Reject
+                              </Button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))
+                    )}
                   </tbody>
                 </table>
               </div>
