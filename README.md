@@ -5,6 +5,8 @@
 **AdFlow Pro** is an advanced marketplace and advertising flow management platform built as a Mid-Term Project. It utilizes the bleeding-edge Next.js 16 App Router, React 19, and Supabase SSR to deliver a hyper-fast, secure, and beautiful role-based system for Admins, Sellers, and Buyers.
 
 🚀 **Live Demo:** [https://mid-term-project-rosy.vercel.app/](https://mid-term-project-rosy.vercel.app/)
+Admin Email: abdulahadwarraich.web@gmail.com
+Admin Password: Ahad@9696
 
 ---
 
