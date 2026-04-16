@@ -7,7 +7,8 @@
 🚀 **Live Demo:** [https://mid-term-project-rosy.vercel.app/](https://mid-term-project-rosy.vercel.app/)
 Admin Email: abdulahadwarraich.web@gmail.com
 Admin Password: Ahad@9696
-
+Seller Email:abdulahad.web96@gmail.com
+Seller Password:12345678
 ---
 
 ## 🌟 Key Features
