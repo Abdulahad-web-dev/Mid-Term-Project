@@ -8,6 +8,16 @@ AdFlow Pro features a sophisticated role-based ecosystem, delivering tailored ex
 
 🚀 **Live Environment:** [https://mid-term-project-rosy.vercel.app/](https://mid-term-project-rosy.vercel.app/)
 
+### 🔑 Demo Credentials
+
+To explore the platform's role-based dashboards immediately, use these credentials:
+
+| Role       | Email                            | Password    |
+| ---------- | -------------------------------- | ----------- |
+| **Admin**  | `abdulahadwarraich.web@gmail.com`| `Ahad@9696`  |
+| **Seller** | `abdulahad.web96@gmail.com`      | `12345678`  |
+| **Buyer**  | `abdulahad.web9@gmail.com`       | `12345678`  |
+
 ---
 
 ## 🧭 Project Architecture & Pages
@@ -66,18 +76,6 @@ The quality control hub.
 | **Animations**   | [Framer Motion](https://www.framer.com/motion/) (Fluid UI transitions)          |
 | **Auth & DB**    | [Supabase SSR](https://supabase.com/) (PostgreSQL + Secure Sessions)            |
 | **Components**   | [Radix UI](https://www.radix-ui.com/), [Lucide](https://lucide.dev/)            |
-
----
-
-## 🔑 Demo Credentials
-
-To explore the platform's role-based dashboards, use the following credentials:
-
-| Role       | Email                            | Password   |
-| ---------- | -------------------------------- | ---------- |
-| **Admin**  | `abdulahadwarraich.web@gmail.com`| `Ahad@9696` |
-| **Seller** | `abdulahad.web96@gmail.com`      | `12345678` |
-| **Buyer**  | `abdulahad.web9@gmail.com`       | `12345678` |
 
 ---
 
