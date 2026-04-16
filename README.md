@@ -7,6 +7,7 @@
 AdFlow Pro features a sophisticated role-based ecosystem, delivering tailored experiences for **Admins**, **Moderators**, **Sellers**, and **Buyers** through a futuristic "Glassmorphic" UI/UX.
 
 🚀 **Live Environment:** [https://mid-term-project-rosy.vercel.app/](https://mid-term-project-rosy.vercel.app/)
+📱 **Android App (APK):** [Download AdFlow-Pro.apk](./download/AdFlow-Pro.apk)
 
 ### 🔑 Demo Credentials
 
