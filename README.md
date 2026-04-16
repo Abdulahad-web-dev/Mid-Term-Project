@@ -20,6 +20,28 @@ To explore the platform's role-based dashboards immediately, use these credentia
 
 ---
 
+## 📸 Platform Screenshots
+
+### 🏠 Home / Landing Page
+![Home Page](./screenshots/hero.png)
+
+### 🔑 Secure Authentication
+![Login](./screenshots/login.png)
+
+### 📈 Seller Dashboard
+![Seller Dashboard](./screenshots/dashboard.png)
+
+### 📝 Post New Ad
+![Post Ad](./screenshots/post_ad.png)
+
+### 👑 Admin Overview
+![Admin Dashboard](./screenshots/admin_dashboard.png)
+
+### 📊 Platform Analytics
+![Admin Stats](./screenshots/admin_stats.png)
+
+---
+
 ## 🧭 Project Architecture & Pages
 
 AdFlow Pro is structured to handle complex user flows with dedicated interfaces for every role.
