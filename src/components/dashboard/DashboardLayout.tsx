@@ -19,10 +19,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 
-const USER_NAV_ITEMS = [
+const BUYER_NAV_ITEMS = [
   { name: "Overview", href: "/dashboard", icon: LayoutDashboard },
-  { name: "My Ads", href: "/dashboard/ads", icon: ListOrdered },
-  { name: "Post New Ad", href: "/dashboard/submit", icon: PlusCircle },
+  { name: "My Purchases", href: "/dashboard/payments", icon: CreditCard },
   { name: "Settings", href: "/dashboard/settings", icon: Settings },
 ];
 
@@ -46,7 +45,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const isAdminPath = pathname.startsWith("/admin");
   const isSellerPath = pathname.startsWith("/seller");
   
-  const navItems = isAdminPath ? ADMIN_NAV_ITEMS : (isSellerPath ? SELLER_NAV_ITEMS : USER_NAV_ITEMS);
+  // We need to know if the user is a buyer to show BUYER_NAV_ITEMS
+  // For now, we'll use a simple check or default to USER_NAV_ITEMS (which we'll rename to something else or keep)
+  // Actually, let's just use BUYER_NAV_ITEMS as the default for /dashboard if not a seller/admin
+  const navItems = isAdminPath ? ADMIN_NAV_ITEMS : (isSellerPath ? SELLER_NAV_ITEMS : BUYER_NAV_ITEMS);
 
   return (
     <div className="min-h-screen bg-[#050505] flex">
