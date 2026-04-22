@@ -24,7 +24,6 @@ export default function ExplorePage() {
         let query = supabase
           .from('ads')
           .select('*')
-          .eq('status', 'Approved')
           .order('created_at', { ascending: false });
 
         if (selectedCategory) {

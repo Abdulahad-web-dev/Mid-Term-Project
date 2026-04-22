@@ -97,7 +97,6 @@ export default function FeaturedAds() {
         const { data, error } = await supabase
           .from('ads')
           .select('*')
-          .eq('status', 'Approved')
           .order('created_at', { ascending: false })
           .limit(6);
 
