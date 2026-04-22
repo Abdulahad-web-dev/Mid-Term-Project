@@ -1,31 +1,40 @@
-import React from 'react';
-import { Button } from 'your-ui-library';  // adjust according to your UI library
+import React, { useState } from 'react';
 
 const LoginPage = () => {
-    const handleBuyerLogin = () => {
-        document.getElementById('email').value = 'abdulahad.web9@gmail.com';
-        document.getElementById('password').value = '12345678';
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    const handleLogin = () => {
+        // Handle login functionality
     };
 
-    const handleSellerLogin = () => {
-        document.getElementById('email').value = 'abdulahad.web96@gmail.com';
-        document.getElementById('password').value = '12345678';
+    const quickLoginBuyer = () => {
+        setEmail('abdulahad.web9@gmail.com');
+        setPassword('12345678');
+    };
+
+    const quickLoginSeller = () => {
+        setEmail('abdulahad.web96@gmail.com');
+        setPassword('12345678');
     };
 
     return (
         <div>
-            <h1>Login</h1>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
-                <Button onClick={handleBuyerLogin} style={{ flex: '1', marginRight: '10px' }}>
-                    <i className="buyer-icon" /> Buyer Login
-                </Button>
-                <Button onClick={handleSellerLogin} style={{ flex: '1', marginLeft: '10px' }}>
-                    <i className="seller-icon" /> Seller Login
-                </Button>
-            </div>
-            <form>
-                <input type="email" id="email" placeholder="Email" required />
-                <input type="password" id="password" placeholder="Password" required />
+            <button onClick={quickLoginBuyer}>Quick Login as Buyer</button>
+            <button onClick={quickLoginSeller}>Quick Login as Seller</button>
+            <form onSubmit={handleLogin}>
+                <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Email"
+                />
+                <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Password"
+                />
                 <button type="submit">Login</button>
             </form>
         </div>
