@@ -26,6 +26,14 @@ const USER_NAV_ITEMS = [
   { name: "Settings", href: "/dashboard/settings", icon: Settings },
 ];
 
+const SELLER_NAV_ITEMS = [
+  { name: "Sales Overview", href: "/seller", icon: LayoutDashboard },
+  { name: "Received Orders", href: "/seller/orders", icon: ListOrdered },
+  { name: "My Listings", href: "/dashboard/ads", icon: ListOrdered },
+  { name: "Post New Ad", href: "/dashboard/submit", icon: PlusCircle },
+  { name: "Settings", href: "/dashboard/settings", icon: Settings },
+];
+
 const ADMIN_NAV_ITEMS = [
   { name: "Admin Home", href: "/admin", icon: ShieldCheck },
   { name: "Verify Payments", href: "/admin/payments", icon: CreditCard },
@@ -36,7 +44,9 @@ const ADMIN_NAV_ITEMS = [
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isAdminPath = pathname.startsWith("/admin");
-  const navItems = isAdminPath ? ADMIN_NAV_ITEMS : USER_NAV_ITEMS;
+  const isSellerPath = pathname.startsWith("/seller");
+  
+  const navItems = isAdminPath ? ADMIN_NAV_ITEMS : (isSellerPath ? SELLER_NAV_ITEMS : USER_NAV_ITEMS);
 
   return (
     <div className="min-h-screen bg-[#050505] flex">
