@@ -2,32 +2,21 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { motion } from "framer-motion";
-import { createClient } from "@/lib/supabase/client";
-
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-
-import {
-  Rocket,
-  Github,
-  Chrome,
-  ShieldCheck,
-  Loader2,
-  ArrowRight,
-  User,
-  Store,
-} from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
-  const supabase = createClient();
 
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Dummy login logic (replace with Supabase later)
+    if (email && password) {
+      router.push("/dashboard");
+    }
+  };
 
   const handleQuickLogin = (role: "buyer" | "seller") => {
     if (role === "buyer") {
@@ -39,73 +28,100 @@ export default function LoginPage() {
     }
   };
 
-  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    if (error) {
-      setError(error.message);
-      setLoading(false);
-      return;
-    }
-
-    const role = data.user?.user_metadata?.role;
-
-    if (role === "admin") router.push("/admin");
-    else if (role === "seller") router.push("/dashboard");
-    else router.push("/dashboard");
-  };
-
   return (
-    <div className="min-h-screen bg-[#050505] flex items-center justify-center p-4">
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="w-full max-w-md p-8 rounded-3xl border border-white/10 bg-black/50"
-      >
-        <h1 className="text-xl text-white mb-4 text-center">Login</h1>
+    <div style={styles.container}>
+      <div style={styles.card}>
+        <h1 style={styles.title}>Login</h1>
 
-        <div className="grid grid-cols-2 gap-3 mb-5">
-          <Button onClick={() => handleQuickLogin("buyer")}>
-            <User className="mr-2 h-4 w-4" /> Buyer
-          </Button>
-          <Button onClick={() => handleQuickLogin("seller")}>
-            <Store className="mr-2 h-4 w-4" /> Seller
-          </Button>
+        {/* Quick Login */}
+        <div style={styles.quickButtons}>
+          <button onClick={() => handleQuickLogin("buyer")} style={styles.button}>
+            Buyer Login
+          </button>
+          <button onClick={() => handleQuickLogin("seller")} style={styles.button}>
+            Seller Login
+          </button>
         </div>
 
-        <form onSubmit={handleLogin} className="space-y-4">
-          {error && <p className="text-red-500 text-sm">{error}</p>}
-
-          <Input
+        {/* Form */}
+        <form onSubmit={handleLogin} style={styles.form}>
+          <input
             type="email"
             placeholder="Email"
+            value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            style={styles.input}
           />
 
-          <Input
+          <input
             type="password"
             placeholder="Password"
+            value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            style={styles.input}
           />
 
-          <Button className="w-full">
-            {loading ? <Loader2 className="animate-spin" /> : "Login"}
-          </Button>
+          <button type="submit" style={styles.loginBtn}>
+            Login
+          </button>
         </form>
-
-        <p className="text-sm text-gray-400 mt-4 text-center">
-          No account? <Link href="/register">Register</Link>
-        </p>
-      </motion.div>
+      </div>
     </div>
   );
 }
+
+/* 🎨 Simple Styles (No dependency issues) */
+const styles: any = {
+  container: {
+    minHeight: "100vh",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    background: "#0f172a",
+  },
+  card: {
+    background: "#1e293b",
+    padding: "30px",
+    borderRadius: "12px",
+    width: "300px",
+    textAlign: "center",
+    color: "white",
+  },
+  title: {
+    marginBottom: "20px",
+  },
+  form: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "10px",
+  },
+  input: {
+    padding: "10px",
+    borderRadius: "6px",
+    border: "none",
+  },
+  loginBtn: {
+    padding: "10px",
+    background: "#3b82f6",
+    color: "white",
+    border: "none",
+    borderRadius: "6px",
+    cursor: "pointer",
+  },
+  quickButtons: {
+    display: "flex",
+    gap: "10px",
+    marginBottom: "15px",
+  },
+  button: {
+    flex: 1,
+    padding: "8px",
+    background: "#334155",
+    color: "white",
+    border: "none",
+    borderRadius: "6px",
+    cursor: "pointer",
+  },
+};
