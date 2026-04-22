@@ -5,29 +5,48 @@ import { Container } from "@/components/layout/Container";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Search, Filter, SlidersHorizontal } from "lucide-react";
+import { Search, Filter, SlidersHorizontal, Loader2 } from "lucide-react";
 import { AdCard } from "@/components/home/FeaturedAds";
-import { useState } from "react";
-
-// More mock data for exploration
-const ALL_ADS = [
-  { id: "1", title: "Premium Tech Workspace in Downtown", category: "Real Estate", city: "San Francisco", price: "45,000", image: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=800", package: "Premium", expiry: "Oct 24, 2026" },
-  { id: "2", title: "2024 Luxury Electric SUV - Limited Edition", category: "Vehicles", city: "New York", price: "85,000", image: "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&q=80&w=800", package: "Premium", expiry: "Oct 19, 2026" },
-  { id: "3", title: "Professional Full-Stack Development Service", category: "Services", city: "Remote", price: "150", image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80&w=800", package: "Standard", expiry: "Oct 15, 2026" },
-  { id: "4", title: "Gaming Laptop RTX 4080 - Barely Used", category: "Electronics", city: "Austin", price: "1,800", image: "https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&q=80&w=800", package: "Basic", expiry: "Oct 10, 2026" },
-  { id: "5", title: "Modern Apartment with City View", category: "Real Estate", city: "Chicago", price: "3,200", image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&q=80&w=800", package: "Standard", expiry: "Oct 22, 2026" },
-  { id: "6", title: "Classic Vintage Camera - Mint Condition", category: "Others", city: "Portland", price: "450", image: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&q=80&w=800", package: "Basic", expiry: "Oct 12, 2026" },
-];
+import { useState, useEffect } from "react";
+import { createClient } from "@/lib/supabase/client";
 
 export default function ExplorePage() {
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [ads, setAds] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const supabase = createClient();
 
-  const filteredAds = ALL_ADS.filter((ad) => {
-    const matchesSearch = ad.title.toLowerCase().includes(search.toLowerCase()) || 
-                         ad.category.toLowerCase().includes(search.toLowerCase());
-    const matchesCategory = selectedCategory ? ad.category === selectedCategory : true;
-    return matchesSearch && matchesCategory;
+  useEffect(() => {
+    const fetchAds = async () => {
+      setLoading(true);
+      try {
+        let query = supabase
+          .from('ads')
+          .select('*')
+          .eq('status', 'Approved')
+          .order('created_at', { ascending: false });
+
+        if (selectedCategory) {
+          query = query.eq('category', selectedCategory);
+        }
+
+        const { data, error } = await query;
+        if (error) throw error;
+        setAds(data || []);
+      } catch (err) {
+        console.error("Error fetching ads:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAds();
+  }, [selectedCategory, supabase]);
+
+  const filteredAds = ads.filter((ad) => {
+    return ad.title.toLowerCase().includes(search.toLowerCase()) || 
+           ad.category.toLowerCase().includes(search.toLowerCase());
   });
 
   return (
@@ -77,39 +96,43 @@ export default function ExplorePage() {
         </Container>
       </div>
 
-      <section className="py-12">
+      <section className="py-12 min-h-[600px]">
         <Container>
           <div className="flex items-center justify-between mb-8 text-sm text-muted-foreground">
             <p>Showing {filteredAds.length} results</p>
             <div className="flex items-center gap-2">
               <span>Sort by:</span>
-              <select className="bg-transparent border-none text-white focus:ring-0 cursor-pointer font-medium">
-                <option>Newest First</option>
-                <option>Price: Low to High</option>
-                <option>Price: High to Low</option>
-                <option>Most Recent</option>
+              <select className="bg-transparent border-none text-white focus:ring-0 cursor-pointer font-medium outline-none">
+                <option value="newest" className="bg-black">Newest First</option>
+                <option value="price-low" className="bg-black">Price: Low to High</option>
+                <option value="price-high" className="bg-black">Price: High to Low</option>
               </select>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 min-h-[400px]">
-            {filteredAds.length > 0 ? (
-              filteredAds.map((ad) => (
+          {loading ? (
+            <div className="flex flex-col items-center justify-center py-20">
+              <Loader2 className="w-10 h-10 animate-spin text-primary mb-4" />
+              <p className="text-muted-foreground">Loading premium listings...</p>
+            </div>
+          ) : filteredAds.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {filteredAds.map((ad) => (
                 <AdCard key={ad.id} ad={ad} featured={ad.package === "Premium"} />
-              ))
-            ) : (
-              <div className="col-span-full flex flex-col items-center justify-center py-20 text-center">
-                <div className="p-4 rounded-full bg-white/5 mb-4">
-                  <Search className="w-8 h-8 text-muted-foreground" />
-                </div>
-                <h3 className="text-xl font-bold mb-2">No matching ads found</h3>
-                <p className="text-muted-foreground">Try adjusting your search or filters to find what you're looking for.</p>
-                <Button variant="link" onClick={() => { setSearch(""); setSelectedCategory(null); }} className="text-primary mt-2">Clear all filters</Button>
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-20 text-center border border-dashed border-white/10 rounded-3xl">
+              <div className="p-4 rounded-full bg-white/5 mb-4">
+                <Search className="w-8 h-8 text-muted-foreground" />
               </div>
-            )}
-          </div>
+              <h3 className="text-xl font-bold mb-2">No matching ads found</h3>
+              <p className="text-muted-foreground">Try adjusting your search or filters to find what you're looking for.</p>
+              <Button variant="link" onClick={() => { setSearch(""); setSelectedCategory(null); }} className="text-primary mt-2">Clear all filters</Button>
+            </div>
+          )}
 
-          {filteredAds.length > 0 && (
+          {!loading && filteredAds.length > 0 && (
             <div className="mt-16 flex justify-center gap-2">
               <Button variant="outline" disabled className="border-white/10">Prev</Button>
               <Button variant="outline" className="border-primary text-primary">1</Button>
@@ -121,4 +144,3 @@ export default function ExplorePage() {
     </MainLayout>
   );
 }
-

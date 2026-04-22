@@ -44,18 +44,21 @@ export default function LoginPage() {
   };
 
   // ⚡ Quick Login
-  const quickLogin = (type: "buyer" | "seller") => {
+  const quickLogin = (type: "buyer" | "seller" | "admin") => {
     if (type === "buyer") {
       setEmail("abdulahad.web9@gmail.com");
       setPassword("12345678");
-    } else {
+    } else if (type === "seller") {
       setEmail("abdulahad.web96@gmail.com");
       setPassword("12345678");
+    } else {
+      setEmail("admin@adflow.com");
+      setPassword("admin123");
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#020617] flex items-center justify-center px-4">
+    <div className="min-h-screen bg-[#020617] flex items-center justify-center px-4 py-10">
       
       {/* Glow */}
       <div className="absolute w-[500px] h-[500px] bg-purple-600/20 blur-[120px] rounded-full"></div>
@@ -77,27 +80,37 @@ export default function LoginPage() {
         </div>
 
         {/* ⚡ Quick Login */}
-        <div className="grid grid-cols-2 gap-3 mb-5">
-          <button
-            onClick={() => quickLogin("buyer")}
-            className="py-2 rounded-lg bg-blue-500/10 border border-blue-500/30 text-blue-300 hover:bg-blue-500/20"
-          >
-            Buyer
-          </button>
+        <div className="space-y-3 mb-6">
+          <p className="text-xs text-center text-gray-500 uppercase tracking-widest font-bold">Quick Access</p>
+          <div className="grid grid-cols-3 gap-2">
+            <button
+              onClick={() => quickLogin("buyer")}
+              className="py-2 rounded-lg bg-blue-500/10 border border-blue-500/30 text-blue-300 hover:bg-blue-500/20 text-xs font-bold"
+            >
+              Buyer
+            </button>
 
-          <button
-            onClick={() => quickLogin("seller")}
-            className="py-2 rounded-lg bg-green-500/10 border border-green-500/30 text-green-300 hover:bg-green-500/20"
-          >
-            Seller
-          </button>
+            <button
+              onClick={() => quickLogin("seller")}
+              className="py-2 rounded-lg bg-green-500/10 border border-green-500/30 text-green-300 hover:bg-green-500/20 text-xs font-bold"
+            >
+              Seller
+            </button>
+
+            <button
+              onClick={() => quickLogin("admin")}
+              className="py-2 rounded-lg bg-purple-500/10 border border-purple-500/30 text-purple-300 hover:bg-purple-500/20 text-xs font-bold"
+            >
+              Admin
+            </button>
+          </div>
         </div>
 
         {/* Form */}
         <form onSubmit={handleLogin} className="space-y-5">
 
           {error && (
-            <div className="text-red-500 text-sm text-center">
+            <div className="text-red-500 text-sm text-center bg-red-500/10 p-2 rounded-lg border border-red-500/20">
               {error}
             </div>
           )}
@@ -135,7 +148,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold hover:opacity-90 transition"
+            className="w-full py-3 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold hover:opacity-90 transition shadow-lg shadow-purple-600/20"
           >
             {loading ? "Signing in..." : "Sign In"}
           </button>
@@ -150,10 +163,10 @@ export default function LoginPage() {
 
         {/* Social */}
         <div className="grid grid-cols-2 gap-4">
-          <button className="py-3 rounded-xl border border-white/10 text-white hover:bg-white/5">
+          <button className="py-3 rounded-xl border border-white/10 text-white hover:bg-white/5 flex items-center justify-center gap-2 text-sm font-medium">
             Github
           </button>
-          <button className="py-3 rounded-xl border border-white/10 text-white hover:bg-white/5">
+          <button className="py-3 rounded-xl border border-white/10 text-white hover:bg-white/5 flex items-center justify-center gap-2 text-sm font-medium">
             Google
           </button>
         </div>
@@ -161,7 +174,7 @@ export default function LoginPage() {
         {/* Footer */}
         <p className="text-center text-sm text-gray-400 mt-6">
           Don’t have an account?{" "}
-          <Link href="/register" className="text-purple-500 hover:underline">
+          <Link href="/register" className="text-purple-500 hover:underline font-bold">
             Sign up for free
           </Link>
         </p>

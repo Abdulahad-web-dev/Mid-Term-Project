@@ -56,7 +56,7 @@ export default function SubmitAdPage() {
         price: Number(price),
         description,
         media_urls: mediaUrls.map(m => m.url).filter(url => url !== ""),
-        status: "Pending"
+        status: "Approved"
       });
 
       if (error) throw error;
